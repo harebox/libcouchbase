@@ -105,6 +105,7 @@ AC_CHECK_HEADERS_ONCE([mach/mach_time.h memcached/protocol_binary.h
                        memcached/vbucket.h sys/socket.h sys/time.h
                        netinet/in.h inttypes.h netdb.h unistd.h
                        ws2tcpip.h winsock2.h libvbucket/vbucket.h
+                       zookeeper/zookeeper.h
                        event.h])
 
 AS_IF([test "x$ac_cv_header_memcached_protocol_binary_h" != "xyes"],
@@ -134,6 +135,28 @@ AC_CACHE_CHECK([for libvbucket], [ac_cv_have_libvbucket],
 
 AS_IF([test "x${ac_cv_have_libvbucket}" != "xyes" -o "x$ac_cv_header_libvbucket_vbucket_h" != "xyes"],
       [AC_MSG_ERROR(Failed to locate libvbucket)])
+
+AS_IF([test "x$ac_cv_header_zookeeper_zookeeper_h" != "xyes"],
+      [AC_MSG_ERROR(Failed to locate zookeeper/zookeeper.h)])
+
+dnl Check that we're able to find a usable libvbucket
+AC_CACHE_CHECK([for zookeeper], [ac_cv_have_zookeeper],
+  [ saved_libs="$LIBS"
+    LIBS=-lzookeeper_mt
+    AC_TRY_LINK([
+      #include <zookeeper/zookeeper.h>
+            ],[
+      zookeeper_close(NULL);
+            ],[
+      ac_cv_have_zookeeper="yes"
+            ], [
+      ac_cv_have_zookeeper="no"
+      ])
+    LIBS="$saved_libs"
+  ])
+
+AS_IF([test "x${ac_cv_have_zookeeper}" != "xyes" -o "x$ac_cv_header_zookeeper_zookeeper_h" != "xyes"],
+      [AC_MSG_ERROR(Failed to locate zookeeper)])
 
 dnl Check that we can use winsock2 plugin
 AC_CACHE_CHECK([for winsock2], [ac_cv_have_winsock2],

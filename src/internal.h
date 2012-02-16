@@ -98,6 +98,19 @@ extern "C" {
     };
 
     struct libcouchbase_st {
+#if 1 // ENABLE_ARCUS
+        /** The arcus host */
+        char *ensemble_list; 
+        /** The cluster code for the service */
+        char *svc_code;
+
+        /** The handle for the zookeeper ensemble */
+        zhandle_t   *zhandle;
+        /** The client id */
+        clientid_t  myid;
+        /** The zookeeper session timeout value */
+        uint32_t session_timeout;
+#endif
         /** The couchbase host */
         char *host;
         /** The port of the couchbase server */

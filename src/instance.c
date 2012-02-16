@@ -56,6 +56,42 @@ const char *libcouchbase_get_port(libcouchbase_t instance)
 }
 
 LIBCOUCHBASE_API
+libcouchbase_t libarcus_create(const char *host,
+                               const char *svc_code,
+                               struct libcouchbase_io_opt_st *io)
+{
+    char buffer[1024];
+    libcouchbase_ssize_t offset;
+    libcouchbase_t ret;
+    char *p;
+
+    if (io == NULL) {
+        io = libcouchbase_create_io_ops(LIBCOUCHBASE_IO_OPS_DEFAULT,
+                                        NULL, NULL);
+        if (io == NULL) {
+            /* You can't initialize the library without a io-handler! */
+            return NULL;
+        }
+    }
+
+    if (host == NULL || svc_code == NULL) {
+        return NULL;
+    }
+
+    if ((ret = calloc(1, sizeof(*ret))) == NULL) {
+        return NULL;
+    }
+
+    libcouchbase_initialize_packet_handlers(ret);
+    libcouchbase_behavior_set_syncmode(ret, LIBCOUCHBASE_ASYNCHRONOUS);
+
+    ret->host = strdup(host);
+    ret->port = "17288";
+
+    
+}
+
+LIBCOUCHBASE_API
 libcouchbase_t libcouchbase_create(const char *host,
                                    const char *user,
                                    const char *passwd,

@@ -49,8 +49,10 @@ static libcouchbase_error_t map_error(protocol_binary_response_status in) {
         return LIBCOUCHBASE_AUTH_ERROR;
     case PROTOCOL_BINARY_RESPONSE_AUTH_CONTINUE:
         return LIBCOUCHBASE_AUTH_CONTINUE;
+/*
     case PROTOCOL_BINARY_RESPONSE_ERANGE:
         return LIBCOUCHBASE_ERANGE;
+*/
     case PROTOCOL_BINARY_RESPONSE_UNKNOWN_COMMAND:
         return LIBCOUCHBASE_UNKNOWN_COMMAND;
     case PROTOCOL_BINARY_RESPONSE_NOT_SUPPORTED:
